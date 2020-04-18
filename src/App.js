@@ -17,9 +17,7 @@ function App() {
       <NavItem icon={<BellIcon />} />
       <NavItem icon={<MessengerIcon />} />
       <NavItem icon={<CaretIcon />} >
-
         <DropdownMenu />
-
       </NavItem>
     </Navbar>
   );
@@ -42,38 +40,43 @@ function NavItem(props) {
       <a href="#" className="icon-button" onClick={() => setOpen(!open)}>
         {props.icon}
       </a>
-
       {open && props.children}
     </li>
   );
 }
 
 function DropdownMenu() {
+
   const [activeMenu, setActiveMenu] = useState('main');
+  const [menuHeight, setMenuHeight] = useState(null);
+
+  function calcHeight(el) {
+    const height = el.offsetHeight;
+    setMenuHeight(height);
+  }
 
   function DropdownItem(props) {
     return (
       <a href="#" className="menu-item" onClick={() => props.goToMenu && setActiveMenu(props.goToMenu)}>
         <span className="icon-button">{props.leftIcon}</span>
-
         {props.children}
-
         <span className="icon-right">{props.rightIcon}</span>
       </a>
     );
   }
 
   return (
-    <div className="dropdown">
+    <div className="dropdown" style={{ height: menuHeight }}>
       <CSSTransition in={activeMenu === 'main'}
         unmountOnExit
         timeout={500}
-        classNames="menu-primary">
+        classNames="menu-primary"
+        onEnter={calcHeight}
+      >
         <div className="menu">
           <DropdownItem>My profile</DropdownItem>
           <DropdownItem
             leftIcon={<CogIcon />}
-            // rightIcon={<ChevronIcon />}
             goToMenu="settings"
           >
           </DropdownItem>
